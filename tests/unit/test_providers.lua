@@ -27,6 +27,7 @@ describe("TTS Providers", function()
         local EdgeProvider = dofile("plugins/edgetts.koplugin/edge_provider.lua")
         local provider = EdgeProvider:new{
             api_url = "https://tts.ngtri.io.vn/tts",
+            api_key = "test-key-123",
             voice = "vi-VN-HoaiMyNeural",
             rate = "+0%",
         }
@@ -34,6 +35,8 @@ describe("TTS Providers", function()
         check.not_nil(req)
         check.equal("POST", req.method)
         check.not_nil(req.source, "request should have ltn12 source")
+        check.not_nil(req.headers["x-api-key"], "request should have api key header")
+        check.equal("test-key-123", req.headers["x-api-key"])
         -- Test that source produces correct data
         local src_fn = req.source
         local chunk = src_fn()
